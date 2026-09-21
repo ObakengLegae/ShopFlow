@@ -1,5 +1,4 @@
-import pytest
-from src.shopflow.extract import extract_data
+from src.extract import extract_data
 
 def test_extract():
     test_csv = "./tests/resources/test_csv.csv"
