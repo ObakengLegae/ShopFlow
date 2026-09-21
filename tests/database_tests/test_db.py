@@ -19,7 +19,7 @@ def test_tables_created_successfully(db_engine):
         result = connection.execute(check_tables_query)
         created_tables = [row[0] for row in result]
 
-    expected_tables = ['countries','customers', 'products', 'invoices', 'invoice_items']
+    expected_tables = ['customers', 'products', 'dates', 'sales']
 
     for table in expected_tables:
         assert table in created_tables, f"Table '{table}' was not created!"

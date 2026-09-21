@@ -20,7 +20,7 @@ CREATE TABLE dates (
 
 CREATE TABLE sales (
     sale_id SERIAL PRIMARY KEY,
-    invoice_no VARCHAR(20)),
+    invoice_no VARCHAR(20),
     customer_id VARCHAR(10) REFERENCES customers(customer_id),
     stock_code VARCHAR(20) REFERENCES products(stock_code),
     date_id INT REFERENCES dates(date_id),
