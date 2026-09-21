@@ -118,3 +118,6 @@ cython_debug/
 .DS_Store
 .vscode/
 .idea/
+
+#dataset
+data/
