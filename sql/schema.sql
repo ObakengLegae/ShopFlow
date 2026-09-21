@@ -1,39 +1,31 @@
--- 1. Countries table
-CREATE TABLE countries (
-    country_id SERIAL PRIMARY KEY,
-    country_name VARCHAR(100) NOT NULL UNIQUE
-);
-
--- 2. Customers Table
 CREATE TABLE customers (
-    customer_id INT PRIMARY KEY,
-    country_id INT REFERENCES countries(country_id) ON DELETE SET NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    customer_id VARCHAR(10) PRIMARY KEY,
+    country VARCHAR(50)
 );
 
--- 3. Products Catalog Table
 CREATE TABLE products (
-    stock_code VARCHAR(30) PRIMARY KEY,
-    description VARCHAR(255),
-    latest_unit_price NUMERIC(10, 2) DEFAULT 0.00,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    stock_code VARCHAR(20) PRIMARY KEY,
+    description VARCHAR(255)
 );
 
--- 4. Invoices / Orders Header
-CREATE TABLE invoices (
-    invoice_no VARCHAR(20) PRIMARY KEY,
-    customer_id INT REFERENCES customers(customer_id) ON DELETE SET NULL,
-    country_id INT NOT NULL REFERENCES countries(country_id),
-    invoice_date TIMESTAMP NOT NULL,
-    is_cancellation BOOLEAN GENERATED ALWAYS AS (invoice_no LIKE 'C%') STORED
+CREATE TABLE dates (
+    date_id INT PRIMARY KEY, -- FORMAT: YYYYMMDD
+    full_date DATE,
+    year INT,
+    month INT,
+    day INT,
+    quarter INT,
+    day_of_week VARCHAR(10)
 );
 
--- 5. Invoice Line Items
-CREATE TABLE invoice_items (
-    invoice_item_id BIGSERIAL PRIMARY KEY,
-    invoice_no VARCHAR(20) NOT NULL REFERENCES invoices(invoice_no) ON DELETE CASCADE,
-    stock_code VARCHAR(30) NOT NULL REFERENCES products(stock_code),
-    quantity INT NOT NULL,
-    unit_price NUMERIC(10, 2) NOT NULL CHECK (unit_price >= 0),
-    line_total NUMERIC(12, 2) GENERATED ALWAYS AS (quantity * unit_price) STORED
+CREATE TABLE sales (
+    sale_id SERIAL PRIMARY KEY,
+    invoice_no VARCHAR(20)),
+    customer_id VARCHAR(10) REFERENCES customers(customer_id),
+    stock_code VARCHAR(20) REFERENCES products(stock_code),
+    date_id INT REFERENCES dates(date_id),
+    quantity INT,
+    unit_price NUMERIC(10, 2),
+    total_amount NUMERIC(10, 2),
+    sale_timestamp TIMESTAMP
 );
