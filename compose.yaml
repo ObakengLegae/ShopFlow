@@ -7,5 +7,6 @@ services:
       POSTGRES_DB: ecommerce_db
     ports:
       - "5432:5432"
-    volumes:
-      - ./data/postgres_db:/var/lib/postgresql/data
+# Commenting this out for test purposes
+#    volumes:
+#      - ./data/postgres_db:/var/lib/postgresql/data
