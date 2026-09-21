@@ -1,9 +1,7 @@
 from sqlalchemy import create_engine, text
 
 
-def initialize_database():
-
-    engine = create_engine('postgresql://postgres:password@localhost:5432/ecommerce_db')
+def initialize_database(engine):
 
     with open('sql/schema.sql', 'r') as file:
         sql_script = file.read()
@@ -13,6 +11,6 @@ def initialize_database():
 
     print("Database tables created successfully!")
 
-
 if __name__ == "__main__":
-    initialize_database()
+    db_engine = create_engine('postgresql://postgres:password@localhost:5432/ecommerce_db')
+    initialize_database(db_engine)

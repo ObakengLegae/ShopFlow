@@ -1,3 +1,4 @@
+-- 1. Countries table
 CREATE TABLE countries (
     country_id SERIAL PRIMARY KEY,
     country_name VARCHAR(100) NOT NULL UNIQUE
