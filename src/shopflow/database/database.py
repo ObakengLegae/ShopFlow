@@ -1,5 +1,7 @@
 import psycopg2
 import pandas as pd
+from psycopg2.extras import execute_values
+
 
 class Database:
 
@@ -40,26 +42,19 @@ class Database:
             connection.close()
 
 
-    def insert_customers(self, file_path):
-        data = pd.read_csv(file_path)
-
-        customers = data[
-            ["customer_id", "country"]
-        ].drop_duplicates(subset=["customer_id"])
-
-        connection = self.database.connect()
+    def insert_data(self, df: pd.DataFrame, table_name: str):
+        connection = self.connect()
         cursor = connection.cursor()
 
+        columns = ', '.join(df.columns)
+        query = f"INSERT INTO {table_name} ({columns}) VALUES %s"
+
+        data_tuples = list(df.itertuples(index=False, name=None))
+
         try:
-            for _, row in customers.iterrows():
-                cursor.execute(
-                    """
-                    INSERT INTO customers (customer_id, country)
-                    VALUES (%s, %s)
-                    """,
-                    (row["customer_id"], row["country"])
-                )
+            execute_values(cursor, query, data_tuples)
             connection.commit()
+
         except Exception:
             connection.rollback()
             raise
