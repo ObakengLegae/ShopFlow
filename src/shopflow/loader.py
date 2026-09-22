@@ -30,3 +30,10 @@ class Loader:
         ].drop_duplicates(subset="stock_code")
 
         self.database.insert_data(products, "stock_code")
+
+    def load_dates(self, data: pd.DataFrame):
+        dates = data[
+            ["date_id", "full_date", "year", "month", "day", "quarter", "day_of_week"]
+        ].drop_duplicates(subset="date_id")
+
+        self.database.insert_data(dates, "dates")
