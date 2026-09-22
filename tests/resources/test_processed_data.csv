@@ -1,4 +1,4 @@
-invoice_no,stock_code,description,quantity,invoice_date,unit_price,customer_id,country,date_id,full_date,year,month,day,quarter,day_of_week,total_amount
+invoice_no,stock_code,description,quantity,sale_timestamp,unit_price,customer_id,country,date_id,full_date,year,month,day,quarter,day_of_week,total_amount
 536365,85123A,WHITE HANGING HEART T-LIGHT HOLDER,6,2010-12-01 08:26:00,2.55,17850,United Kingdom,20101201,2010-12-01,2010,12,1,4,Wednesday,15.30
 536365,71053,WHITE METAL LANTERN,6,2010-12-01 08:26:00,3.39,17850,United Kingdom,20101201,2010-12-01,2010,12,1,4,Wednesday,20.34
 536365,84406B,CREAM CUPID HEARTS COAT HANGER,8,2010-12-01 08:26:00,2.75,17850,United Kingdom,20101201,2010-12-01,2010,12,1,4,Wednesday,22.00

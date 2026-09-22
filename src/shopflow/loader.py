@@ -1,9 +1,4 @@
 import pandas as pd
-from numpy.core import records
-from psycopg2.extras import execute_values
-from sqlalchemy.engine import row
-
-from src.shopflow.database import database
 from src.shopflow.database.database import Database
 from src.shopflow.extractor import Extractor
 
