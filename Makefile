@@ -11,4 +11,6 @@ stop_database:
 	@$(DOCKER) compose down
 
 test:
+	@sleep 2
 	@python3 -m pytest tests/$(TEST_PATH) -v
+	@sleep 1
