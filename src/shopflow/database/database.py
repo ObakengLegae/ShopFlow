@@ -39,7 +39,7 @@ class Database:
             cursor.close()
             connection.close()
 
-#Todo: Reminder to add statement validation logic
+#Todo: Add some validation logic against empty frames and table names
     def insert_data(self, df: pd.DataFrame, table_name: str):
         connection = self.connect()
         cursor = connection.cursor()
