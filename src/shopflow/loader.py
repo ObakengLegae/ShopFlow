@@ -25,14 +25,14 @@ class Loader:
             ["customer_id", "country"]
         ].drop_duplicates(subset="customer_id")
 
-        self.database.insert_data(customers, "customer_id")
+        self.database.insert_data(customers, "customers")
 
     def load_products(self, data: pd.DataFrame):
         products = data[
             ["stock_code", "description"]
         ].drop_duplicates(subset="stock_code")
 
-        self.database.insert_data(products, "stock_code")
+        self.database.insert_data(products, "products")
 
     def load_dates(self, data: pd.DataFrame):
         dates = data[
