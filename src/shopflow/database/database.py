@@ -63,11 +63,11 @@ class Database:
             cursor.close()
             connection.close()
 
-    def fetch_data(self, query):
+    def fetch_data(self, query, params=None):
         connection = self.connect()
         cursor = connection.cursor()
         try:
-            cursor.execute(query)
+            cursor.execute(query, params)
             if cursor.description:
                 columns = [desc[0] for desc in cursor.description]
                 return pd.DataFrame(cursor.fetchall(), columns=columns)
