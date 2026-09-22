@@ -41,7 +41,24 @@ def test_tables_created_successfully(database_connection):
     for name in expected_tables:
         assert name in table_names
 
-def test_insert_data_successfully(database_instance, database_connection):
+def test_fetch_data(database_instance):
+    df_customers = pd.DataFrame({
+        "customer_id": ["f_cust01", "f_cust02"],
+        "country": ["Spain", "Italy"],
+    })
+    database_instance.insert_data(df_customers, "customers")
+
+    # Test without params
+    df_all = database_instance.fetch_data("SELECT * FROM customers WHERE customer_id LIKE 'f_cust%';")
+    assert len(df_all) == 2
+
+    # Test with params
+    df_param = database_instance.fetch_data("SELECT * FROM customers WHERE country = %s;", ("Spain",))
+    assert len(df_param) == 1
+    assert df_param.iloc[0]["country"] == "Spain"
+
+
+def test_insert_customers_successfully(database_instance, database_connection):
     df_customers = pd.DataFrame({
         "customer_id": ["test01", "test02"],
         "country": ["United Kingdom", "France"],
@@ -49,12 +66,7 @@ def test_insert_data_successfully(database_instance, database_connection):
 
     database_instance.insert_data(df_customers, "customers")
 
-    query_file = "./sql/select_customers.sql"
-
-    with open(query_file, "r") as file:
-        sql = file.read()
-
-    df_result = database_instance.fetch_data(sql)
+    df_result = database_instance.fetch_data("SELECT * FROM customers WHERE customer_id IN ('test01', 'test02');")
 
     assert not df_result.empty
     assert len(df_result) == 2
