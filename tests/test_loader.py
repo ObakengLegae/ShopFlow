@@ -43,5 +43,11 @@ def test_load_customers(database_instance, loader_instance, sample_data):
     assert set(df_result["customer_id"]) == {"17850", "13047", "12583"}
     assert set(df_result["country"]) == {"United Kingdom", "France"}
 
+def test_load_products(database_instance, loader_instance, sample_data):
+    loader_instance.load_products(sample_data)
 
+    df_result = database_instance.fetch_data("SELECT * FROM products WHERE stock_code IN ('22633', '22632', '84879', '22728')")
 
+    assert not df_result.empty
+    assert len(df_result) == 4
+    assert set(df_result["stock_code"]) == {"22633", "22632", "84879", "22728"}
