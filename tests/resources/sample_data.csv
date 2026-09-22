@@ -1,0 +1,5 @@
+invoice_no,stock_code,description,quantity,sale_timestamp,unit_price,customer_id,country,date_id,full_date,year,month,day,quarter,day_of_week,total_amount
+536366,22633,HAND WARMER UNION JACK,6,2010-12-01 08:28:00,1.85,17850,United Kingdom,20101201,2010-12-01,2010,12,1,4,Wednesday,11.10
+536366,22632,HAND WARMER RED POLKA DOT,6,2010-12-01 08:28:00,1.85,17850,United Kingdom,20101201,2010-12-01,2010,12,1,4,Wednesday,11.10
+536367,84879,ASSORTED COLOUR BIRD ORNAMENT,32,2010-12-01 08:34:00,1.69,13047,United Kingdom,20101201,2010-12-01,2010,12,1,4,Wednesday,54.08
+536370,22728,ALARM CLOCK BAKELIKE PINK,24,2010-12-01 08:45:00,3.75,12583,France,20101201,2010-12-01,2010,12,1,4,Wednesday,90.00
