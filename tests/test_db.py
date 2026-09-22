@@ -126,3 +126,46 @@ def test_insert_dates_successfully(database_instance):
     assert 20230101 in date_ids
     assert 20230102 in date_ids
     assert 2023 in years
+
+def test_insert_sales_successfully(database_instance):
+    df_customers = pd.DataFrame({"customer_id": ["s_cust01"], "country": ["Germany"]})
+    df_products = pd.DataFrame({"stock_code": ["S-P01"], "description": ["Sale Product"]})
+    df_dates = pd.DataFrame({
+        "date_id": [20231010],
+        "full_date": [date(2023, 10, 10)],
+        "year": [2023],
+        "month": [10],
+        "day": [10],
+        "quarter": [4],
+        "day_of_week": ["Tuesday"]
+    })
+
+    database_instance.insert_data(df_customers, "customers")
+    database_instance.insert_data(df_products, "products")
+    database_instance.insert_data(df_dates, "dates")
+
+    df_sales = pd.DataFrame({
+        "invoice_no": ["INV-001"],
+        "customer_id": ["s_cust01"],
+        "stock_code": ["S-P01"],
+        "date_id": [20231010],
+        "quantity": [5],
+        "unit_price": [10.50],
+        "total_amount": [52.50],
+        "sale_timestamp": [pd.Timestamp("2023-10-10 14:30:00")],
+    })
+
+    database_instance.insert_data(df_sales, "sales")
+
+    df_result = database_instance.fetch_data("SELECT * FROM sales WHERE invoice_no = 'INV-001';")
+
+    assert not df_result.empty
+    assert len(df_result) == 1
+
+    invoice_nos = df_result["invoice_no"].to_list()
+    sale_timestamps = df_result["sale_timestamp"].to_list()
+    quantities = df_result["quantity"].to_list()
+
+    assert "INV-001" in invoice_nos
+    assert pd.Timestamp("2023-10-10 14:30:00") in sale_timestamps
+    assert 5 in quantities
