@@ -8,7 +8,7 @@ from src.shopflow.transformer import Transformer
 def sample_transformed_data():
     extractor = Extractor()
     transformer = Transformer()
-    test_csv = "./tests/resources/test_csv_two.csv"
+    test_csv = "./tests/resources/raw_csv_with_null_values.csv"
     data = extractor.extract_data(test_csv)
     transformed_data = transformer.transform(data)
     return transformed_data
