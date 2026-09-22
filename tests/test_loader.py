@@ -51,3 +51,13 @@ def test_load_products(database_instance, loader_instance, sample_data):
     assert not df_result.empty
     assert len(df_result) == 4
     assert set(df_result["stock_code"]) == {"22633", "22632", "84879", "22728"}
+
+def test_load_dates(database_instance, loader_instance, sample_data):
+    loader_instance.load_dates(sample_data)
+
+    df_result = database_instance.fetch_data("SELECT * FROM dates WHERE date_id = 20101201;")
+
+    assert not df_result.empty
+    assert len(df_result) == 1
+    assert df_result.iloc[0]["date_id"] == 20101201
+    assert df_result.iloc[0]["day_of_week"] == "Wednesday"
