@@ -41,7 +41,7 @@ class Database:
             cursor.close()
             connection.close()
 
-
+#Todo: Reminder to add statement validation logic
     def insert_data(self, df: pd.DataFrame, table_name: str):
         connection = self.connect()
         cursor = connection.cursor()
@@ -72,6 +72,21 @@ class Database:
                 columns = [desc[0] for desc in cursor.description]
                 return pd.DataFrame(cursor.fetchall(), columns=columns)
             return pd.DataFrame()
+        finally:
+            cursor.close()
+            connection.close()
+
+    def update_data(self, query, params=None):
+        connection = self.connect()
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute(query, params)
+            connection.commit()
+            return cursor.rowcount
+        except Exception:
+            connection.rollback()
+            raise
         finally:
             cursor.close()
             connection.close()
