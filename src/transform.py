@@ -27,6 +27,7 @@ def transform(df):
     df['day_of_week'] = df['invoice_date'].dt.day_name()
 
     df['total_amount'] = df['quantity'] * df['unit_price']
+    df['total_amount'] = df['total_amount'].map('{:.2f}'.format)
 
     return df
 
