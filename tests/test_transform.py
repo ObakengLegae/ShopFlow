@@ -18,7 +18,7 @@ def test_columns_are_added(sample_transformed_data):
         "stock_code",
         "description",
         "quantity",
-        "invoice_date",
+        "sale_timestamp",
         "unit_price",
         "customer_id",
         "country",
@@ -37,7 +37,7 @@ def test_columns_are_added(sample_transformed_data):
 
 
 def test_invoice_date_is_datetime(sample_transformed_data):
-    assert pd.api.types.is_datetime64_any_dtype(sample_transformed_data['invoice_date']), \
+    assert pd.api.types.is_datetime64_any_dtype(sample_transformed_data['sale_timestamp']), \
         "invoice_date column was not converted to a datetime object."
 
 

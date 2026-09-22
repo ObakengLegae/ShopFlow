@@ -8,7 +8,7 @@ def transform(df):
         'StockCode': 'stock_code',
         'Description': 'description',
         'Quantity': 'quantity',
-        'InvoiceDate': 'invoice_date',
+        'InvoiceDate': 'sale_timestamp',
         'UnitPrice': 'unit_price',
         'CustomerID': 'customer_id',
         'Country': 'country'
@@ -16,15 +16,15 @@ def transform(df):
 
     df['description'] = df['description'].fillna("unknown").astype(str)
     df['customer_id'] = df['customer_id'].fillna("unknown").astype(str)
-    df['invoice_date'] = pd.to_datetime(df['invoice_date'], format='%m/%d/%y %H:%M')
+    df['sale_timestamp'] = pd.to_datetime(df['sale_timestamp'], format='%m/%d/%y %H:%M')
 
-    df['date_id'] = df['invoice_date'].dt.strftime('%Y%m%d').astype(int)
-    df['full_date'] = df['invoice_date'].dt.date
-    df['year'] = df['invoice_date'].dt.year
-    df['month'] = df['invoice_date'].dt.month
-    df['day'] = df['invoice_date'].dt.day
-    df['quarter'] = df['invoice_date'].dt.quarter
-    df['day_of_week'] = df['invoice_date'].dt.day_name()
+    df['date_id'] = df['sale_timestamp'].dt.strftime('%Y%m%d').astype(int)
+    df['full_date'] = df['sale_timestamp'].dt.date
+    df['year'] = df['sale_timestamp'].dt.year
+    df['month'] = df['sale_timestamp'].dt.month
+    df['day'] = df['sale_timestamp'].dt.day
+    df['quarter'] = df['sale_timestamp'].dt.quarter
+    df['day_of_week'] = df['sale_timestamp'].dt.day_name()
 
     df['total_amount'] = df['quantity'] * df['unit_price']
     df['total_amount'] = df['total_amount'].map('{:.2f}'.format)

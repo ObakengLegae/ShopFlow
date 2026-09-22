@@ -37,3 +37,11 @@ class Loader:
         ].drop_duplicates(subset="date_id")
 
         self.database.insert_data(dates, "dates")
+
+    def load_sales(self, data: pd.DataFrame):
+        sales = data[
+            ["invoice_no", "customer_id", "stock_code", "date_id", "quantity", "unit_price", "total_amount",
+             "sale_timestamp"]
+        ].drop_duplicates(subset="invoice_no")
+
+        self.database.insert_data(sales, "sales")
