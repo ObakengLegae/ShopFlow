@@ -36,9 +36,9 @@ def save_transformed_data(df):
     path = './data/processed/uci/'
     os.makedirs(path, exist_ok=True)
 
-    df.to_csv(path + 'processed_data.csv', index=False)
+    df.to_csv(path + 'test_processed_data.csv', index=False)
 
-    expected_result = './data/processed/uci/processed_data.csv'
+    expected_result = './data/processed/uci/test_processed_data.csv'
 
     if os.path.exists(expected_result):
         print(f"Data saved to csv at {expected_result}")

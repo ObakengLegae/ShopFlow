@@ -1,4 +1,5 @@
 import psycopg2
+import pandas as pd
 
 class Database:
 
@@ -30,6 +31,35 @@ class Database:
             cursor.execute(sql)
             connection.commit()
 
+        except Exception:
+            connection.rollback()
+            raise
+
+        finally:
+            cursor.close()
+            connection.close()
+
+
+    def insert_customers(self, file_path):
+        data = pd.read_csv(file_path)
+
+        customers = data[
+            ["customer_id", "country"]
+        ].drop_duplicates(subset=["customer_id"])
+
+        connection = self.database.connect()
+        cursor = connection.cursor()
+
+        try:
+            for _, row in customers.iterrows():
+                cursor.execute(
+                    """
+                    INSERT INTO customers (customer_id, country)
+                    VALUES (%s, %s)
+                    """,
+                    (row["customer_id"], row["country"])
+                )
+            connection.commit()
         except Exception:
             connection.rollback()
             raise
