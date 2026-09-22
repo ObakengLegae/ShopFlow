@@ -1,5 +1,8 @@
+from datetime import date
+
 import pytest
 import pandas as pd
+
 
 from src.shopflow.database.database import Database
 
@@ -98,3 +101,28 @@ def test_insert_products_successfully(database_instance):
     assert "Test Product 1" in descriptions
     assert "Test Product 2" in descriptions
 
+def test_insert_dates_successfully(database_instance):
+
+    df_dates = pd.DataFrame({
+        "date_id": [20230101, 20230102],
+        "full_date": [date(2023, 1, 1), date(2023, 1, 2)],
+        "year": [2023, 2023],
+        "month": [1, 1],
+        "day": [1, 2],
+        "quarter": [1, 1],
+        "day_of_week": ["Sunday", "Monday"]
+    })
+
+    database_instance.insert_data(df_dates, "dates")
+
+    df_result = database_instance.fetch_data("SELECT * FROM dates WHERE date_id IN (20230101, 20230102);")
+
+    assert not df_result.empty
+    assert len(df_result) == 2
+
+    date_ids = df_result["date_id"].to_list()
+    years = df_result["year"].to_list()
+
+    assert 20230101 in date_ids
+    assert 20230102 in date_ids
+    assert 2023 in years
