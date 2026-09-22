@@ -1,14 +1,14 @@
-CREATE TABLE customers (
+CREATE TABLE IF NOT EXISTS customers (
     customer_id VARCHAR(10) PRIMARY KEY,
     country VARCHAR(50)
 );
 
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
     stock_code VARCHAR(20) PRIMARY KEY,
     description VARCHAR(255)
 );
 
-CREATE TABLE dates (
+CREATE TABLE IF NOT EXISTS dates (
     date_id INT PRIMARY KEY, -- FORMAT: YYYYMMDD
     full_date DATE,
     year INT,
@@ -18,7 +18,7 @@ CREATE TABLE dates (
     day_of_week VARCHAR(10)
 );
 
-CREATE TABLE sales (
+CREATE TABLE IF NOT EXISTS sales (
     sale_id SERIAL PRIMARY KEY,
     invoice_no VARCHAR(20),
     customer_id VARCHAR(10) REFERENCES customers(customer_id),
