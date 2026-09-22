@@ -1,6 +1,6 @@
 import pandas as pd
-from database.database import Database
-from extractor import Extractor
+from src.shopflow.database.database import Database
+from src.shopflow.extractor import Extractor
 
 class Loader:
     def __init__(self, database: Database):
