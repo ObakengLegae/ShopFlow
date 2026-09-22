@@ -12,7 +12,7 @@ def database_instance():
     database = Database(
         host="localhost",
         port=5432,
-        database="ecommerce_db",
+        database="shopflow",
         user="postgres",
         password="password"
     )

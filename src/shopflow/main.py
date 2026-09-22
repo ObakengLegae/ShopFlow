@@ -1,15 +1,17 @@
-from src.shopflow.extractor import extract_data
-from transformer import transform
-from transformer import save_transformed_data
+from src.shopflow.extractor import Extractor
+from transformer import Transformer
 
 def main():
+    extractor = Extractor()
+    transformer = Transformer()
+
     raw_data_path = './data/raw/uci/Online Retail.csv'
 
-    raw_data = extract_data(raw_data_path)
+    raw_data = extractor.extract_data(raw_data_path)
 
-    transformed_data = transform(raw_data)
+    transformed_data = transformer.transform(raw_data)
 
-    save_transformed_data(transformed_data)
+    transformer.save_transformed_data(transformed_data)
 
 if __name__ == '__main__':
     main()
