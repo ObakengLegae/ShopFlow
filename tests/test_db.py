@@ -162,10 +162,24 @@ def test_insert_sales_successfully(database_instance):
     assert not df_result.empty
     assert len(df_result) == 1
 
-    invoice_nos = df_result["invoice_no"].to_list()
-    sale_timestamps = df_result["sale_timestamp"].to_list()
-    quantities = df_result["quantity"].to_list()
+    assert df_result.iloc[0]["invoice_no"] == "INV-001"
+    assert df_result.iloc[0]["sale_timestamp"] == pd.Timestamp("2023-10-10 14:30:00")
+    assert df_result.iloc[0]["quantity"] == 5
 
-    assert "INV-001" in invoice_nos
-    assert pd.Timestamp("2023-10-10 14:30:00") in sale_timestamps
-    assert 5 in quantities
+def test_update_data(database_instance):
+    df_products = pd.DataFrame({
+        "stock_code": ["U-001"],
+        "description": ["Old description"],
+    })
+
+    database_instance.insert_data(df_products, "products")
+
+    database_instance.update_data(
+        "UPDATE products SET description = %s WHERE stock_code = %s;",
+        ("New Description", "U-001")
+    )
+
+    df_result = database_instance.fetch_data("SELECT * FROM Products WHERE stock_code = 'U-001';")
+
+    assert df_result.iloc[0]["stock_code"] == "U-001"
+    assert df_result.iloc[0]["description"] == "New Description"
