@@ -8,6 +8,7 @@ class Database:
         self.database = database
         self.user = user
         self.password = password
+        self.default_sql = "./sql/schema.sql"
 
     def connect(self):
         return psycopg2.connect(
@@ -17,3 +18,22 @@ class Database:
             user = self.user,
             password = self.password
         )
+
+    def create_tables(self, sql_file):
+        connection = self.connect()
+        cursor = connection.cursor()
+
+        try:
+            with open(sql_file, "r") as file:
+                sql = file.read()
+
+            cursor.execute(sql)
+            connection.commit()
+
+        except Exception:
+            connection.rollback()
+            raise
+
+        finally:
+            cursor.close()
+            connection.close()

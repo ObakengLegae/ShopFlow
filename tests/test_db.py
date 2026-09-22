@@ -1,25 +1,37 @@
 import pytest
-from sqlalchemy import create_engine, text
-from src.shopflow.database.database import initialize_database
+from src.shopflow.database.database import Database
+
 
 @pytest.fixture
-def db_engine():
-    engine = create_engine('postgresql://postgres:password@localhost:5432/ecommerce_db')
-    return engine
+def database_connection():
+    database = Database(
+        host="localhost",
+        port=5432,
+        database="ecommerce_db",
+        user="postgres",
+        password="password"
+    )
+    connection = database.connect()
+    database.create_tables(database.default_sql)
+    return connection
 
-def test_tables_created_successfully(db_engine):
-    initialize_database(db_engine)
-    check_tables_query = text("""
-        SELECT table_name 
-        FROM information_schema.tables 
+
+def test_database_connection(database_connection):
+    assert database_connection is not None
+    database_connection.close()
+
+def test_tables_created_successfully(database_connection):
+    cursor = database_connection.cursor()
+    cursor.execute("""
+        SELECT table_name
+        FROM information_schema.tables
         WHERE table_schema = 'public';
     """)
 
-    with db_engine.connect() as connection:
-        result = connection.execute(check_tables_query)
-        created_tables = [row[0] for row in result]
+    tables = cursor.fetchall()
 
-    expected_tables = ['customers', 'products', 'dates', 'sales']
+    expected_tables = ["customers", "products", "dates", "sales"]
+    table_names = [table[0] for table in tables]
 
-    for table in expected_tables:
-        assert table in created_tables, f"Table '{table}' was not created!"
+    for name in expected_tables:
+        assert name in table_names
