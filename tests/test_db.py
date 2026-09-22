@@ -49,9 +49,20 @@ def test_insert_data_successfully(database_instance, database_connection):
 
     database_instance.insert_data(df_customers, "customers")
 
-    df_result = database_instance.fetch_data("./sql/customer_id.sql")
+    query_file = "./sql/select_customers.sql"
+
+    with open(query_file, "r") as file:
+        sql = file.read()
+
+    df_result = database_instance.fetch_data(sql)
 
     assert not df_result.empty
     assert len(df_result) == 2
-    assert df_result.iloc["country"] == "United Kingdom"
-    assert df_result.iloc["country"] == "France"
+
+    customer_ids = df_result["customer_id"].to_list()
+    countries = df_result["country"].to_list()
+
+    assert "test01" in customer_ids
+    assert "test02" in customer_ids
+    assert "United Kingdom" in countries
+    assert "France" in countries
