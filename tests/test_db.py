@@ -183,3 +183,19 @@ def test_update_data(database_instance):
 
     assert df_result.iloc[0]["stock_code"] == "U-001"
     assert df_result.iloc[0]["description"] == "New Description"
+
+def test_delete_data(database_instance):
+    df_products = pd.DataFrame({
+        "stock_code": ["D-001"],
+        "description": ["To Be Deleted"]
+    })
+
+    database_instance.insert_data(df_products, "products")
+
+    database_instance.delete_data(
+        "DELETE FROM products WHERE stock_code = %s;",
+        ("D-001",)
+    )
+
+    df_result = database_instance.fetch_data("SELECT * FROM products WHERE stock_code = 'D-001';")
+    assert df_result.empty
