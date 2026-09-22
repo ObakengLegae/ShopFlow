@@ -32,11 +32,9 @@ class Database:
 
             cursor.execute(sql)
             connection.commit()
-
         except Exception:
             connection.rollback()
             raise
-
         finally:
             cursor.close()
             connection.close()
@@ -54,18 +52,18 @@ class Database:
         try:
             execute_values(cursor, query, data_tuples)
             connection.commit()
-
         except Exception:
             connection.rollback()
             raise
-
         finally:
             cursor.close()
             connection.close()
 
+
     def fetch_data(self, query, params=None):
         connection = self.connect()
         cursor = connection.cursor()
+
         try:
             cursor.execute(query, params)
             if cursor.description:
@@ -76,7 +74,23 @@ class Database:
             cursor.close()
             connection.close()
 
+
     def update_data(self, query, params=None):
+        connection = self.connect()
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute(query, params)
+            connection.commit()
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            cursor.close()
+            connection.close()
+
+
+    def delete_data(self, query, params=None):
         connection = self.connect()
         cursor = connection.cursor()
 
