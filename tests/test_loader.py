@@ -61,3 +61,16 @@ def test_load_dates(database_instance, loader_instance, sample_data):
     assert len(df_result) == 1
     assert df_result.iloc[0]["date_id"] == 20101201
     assert df_result.iloc[0]["day_of_week"] == "Wednesday"
+
+def test_load_sales(database_instance, loader_instance, sample_data):
+    loader_instance.load_customers(sample_data)
+    loader_instance.load_products(sample_data)
+    loader_instance.load_dates(sample_data)
+
+    loader_instance.load_sales(sample_data)
+
+    df_result = database_instance.fetch_data("SELECT * FROM sales WHERE invoice_no IN ('536366', '536367', '536370');")
+
+    assert not df_result.empty
+    assert len(df_result) == 3
+    assert set(df_result["invoice_no"]) == {"536366", "536367", "536370"}
