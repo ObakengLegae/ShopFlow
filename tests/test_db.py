@@ -9,13 +9,7 @@ from src.shopflow.database.database import Database
 
 @pytest.fixture
 def database_instance():
-    database = Database(
-        host="localhost",
-        port=5432,
-        database="shopflow",
-        user="postgres",
-        password="password"
-    )
+    database = Database()
     database.create_tables(database.default_sql)
     return database
 
