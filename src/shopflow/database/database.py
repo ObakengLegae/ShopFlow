@@ -1,16 +1,20 @@
+import os
+
 import psycopg2
 import pandas as pd
 from psycopg2.extras import execute_values
+from dotenv import load_dotenv
 
-
+load_dotenv()
 class Database:
 
-    def __init__(self, host, port, database, user, password):
-        self.host = host
-        self.port = port
-        self.database = database
-        self.user = user
-        self.password = password
+    def __init__(self):
+        self.host = os.getenv("DB_HOST")
+        self.port = os.getenv("DB_PORT")
+        self.database = os.getenv("DB_NAME")
+        self.user = os.getenv("DB_USER")
+        self.password = os.getenv("DB_PASSWORD")
+
         self.default_sql = "./sql/schema.sql"
 
     def connect(self):
