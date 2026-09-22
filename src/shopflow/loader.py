@@ -5,14 +5,15 @@ from sqlalchemy.engine import row
 
 from src.shopflow.database import database
 from src.shopflow.database.database import Database
-from src.shopflow.extract import extract_data
+from src.shopflow.extractor import Extractor
 
 class Loader:
     def __init__(self, database: Database):
         self.database = database
+        self.extractor = Extractor()
 
     def load(self, file_path: str):
-        processed_data = extract_data(file_path)
+        processed_data = self.extractor.extract_data(file_path)
 
         self.load_customers(processed_data)
         self.load_products(processed_data)

@@ -1,6 +1,6 @@
-from src.shopflow.extract import extract_data
-from transform import transform
-from transform import save_transformed_data
+from src.shopflow.extractor import extract_data
+from transformer import transform
+from transformer import save_transformed_data
 
 def main():
     raw_data_path = './data/raw/uci/Online Retail.csv'
