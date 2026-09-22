@@ -15,6 +15,9 @@ class Loader:
         processed_data = extract_data(file_path)
 
         self.load_customers(processed_data)
+        self.load_products(processed_data)
+        self.load_dates(processed_data)
+        self.load_sales(processed_data)
 
 
     def load_customers(self, data: pd.DataFrame):
