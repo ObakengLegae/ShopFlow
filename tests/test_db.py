@@ -48,17 +48,15 @@ def test_fetch_data(database_instance):
     })
     database_instance.insert_data(df_customers, "customers")
 
-    # Test without params
     df_all = database_instance.fetch_data("SELECT * FROM customers WHERE customer_id LIKE 'f_cust%';")
     assert len(df_all) == 2
 
-    # Test with params
     df_param = database_instance.fetch_data("SELECT * FROM customers WHERE country = %s;", ("Spain",))
     assert len(df_param) == 1
     assert df_param.iloc[0]["country"] == "Spain"
 
 
-def test_insert_customers_successfully(database_instance, database_connection):
+def test_insert_customers_successfully(database_instance):
     df_customers = pd.DataFrame({
         "customer_id": ["test01", "test02"],
         "country": ["United Kingdom", "France"],
@@ -78,3 +76,25 @@ def test_insert_customers_successfully(database_instance, database_connection):
     assert "test02" in customer_ids
     assert "United Kingdom" in countries
     assert "France" in countries
+
+def test_insert_products_successfully(database_instance):
+    df_products = pd.DataFrame({
+        "stock_code": ["P001", "P002"],
+        "description": ["Test Product 1", "Test Product 2"],
+    })
+
+    database_instance.insert_data(df_products, "products")
+
+    df_result = database_instance.fetch_data("SELECT * FROM products WHERE stock_code IN ('P001', 'P002');")
+
+    assert not df_result.empty
+    assert len(df_result) == 2
+
+    stock_codes = df_result["stock_code"].to_list()
+    descriptions = df_result["description"].to_list()
+
+    assert "P001" in stock_codes
+    assert "P002" in stock_codes
+    assert "Test Product 1" in descriptions
+    assert "Test Product 2" in descriptions
+
