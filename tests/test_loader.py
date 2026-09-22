@@ -91,3 +91,7 @@ def test_load(database_instance, loader_instance):
 
     df_sales = database_instance.fetch_data("SELECT * FROM sales WHERE invoice_no IN ('536366', '536367', '536370');")
     assert len(df_sales) == 3
+
+def test_load_non_existent_file_raises_error(loader_instance):
+    with pytest.raises(FileNotFoundError):
+        loader_instance.load("non_existent_file.csv")
