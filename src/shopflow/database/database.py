@@ -62,3 +62,16 @@ class Database:
         finally:
             cursor.close()
             connection.close()
+
+    def fetch_data(self, query):
+        connection = self.connect()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            if cursor.description:
+                columns = [desc[0] for desc in cursor.description]
+                return pd.DataFrame(cursor.fetchall(), columns=columns)
+            return pd.DataFrame()
+        finally:
+            cursor.close()
+            connection.close()

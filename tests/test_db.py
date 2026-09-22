@@ -1,9 +1,11 @@
 import pytest
+import pandas as pd
+
 from src.shopflow.database.database import Database
 
 
 @pytest.fixture
-def database_connection():
+def database_instance():
     database = Database(
         host="localhost",
         port=5432,
@@ -11,14 +13,17 @@ def database_connection():
         user="postgres",
         password="password"
     )
-    connection = database.connect()
     database.create_tables(database.default_sql)
-    return connection
+    return database
 
+@pytest.fixture
+def database_connection(database_instance):
+    connection = database_instance.connect()
+    yield connection
+    connection.close()
 
 def test_database_connection(database_connection):
     assert database_connection is not None
-    database_connection.close()
 
 def test_tables_created_successfully(database_connection):
     cursor = database_connection.cursor()
@@ -35,3 +40,18 @@ def test_tables_created_successfully(database_connection):
 
     for name in expected_tables:
         assert name in table_names
+
+def test_insert_data_successfully(database_instance, database_connection):
+    df_customers = pd.DataFrame({
+        "customer_id": ["test01", "test02"],
+        "country": ["United Kingdom", "France"],
+    })
+
+    database_instance.insert_data(df_customers, "customers")
+
+    df_result = database_instance.fetch_data("./sql/customer_id.sql")
+
+    assert not df_result.empty
+    assert len(df_result) == 2
+    assert df_result.iloc["country"] == "United Kingdom"
+    assert df_result.iloc["country"] == "France"
