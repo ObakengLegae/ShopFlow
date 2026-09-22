@@ -1,10 +1,8 @@
 import pytest
 import pandas as pd
-import os
 
-
-from src.extract import extract_data
-from src.transform import transform
+from src.shopflow.extract import extract_data
+from src.shopflow.transform import transform
 
 @pytest.fixture
 def sample_transformed_data():

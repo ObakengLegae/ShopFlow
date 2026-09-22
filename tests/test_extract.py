@@ -1,4 +1,4 @@
-from src.extract import extract_data
+from src.shopflow.extract import extract_data
 
 def test_extract():
     test_csv = "./tests/resources/test_csv_one.csv"

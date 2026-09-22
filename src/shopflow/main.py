@@ -1,6 +1,4 @@
-import pandas as pd
-
-from extract import extract_data
+from src.shopflow.extract import extract_data
 from transform import transform
 from transform import save_transformed_data
 
