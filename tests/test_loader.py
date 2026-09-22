@@ -5,6 +5,7 @@ from src.shopflow.database.database import Database
 from src.shopflow.extractor import Extractor
 from src.shopflow.loader import Loader
 
+sample_data_path = "./tests/resources/sample_data.csv"
 @pytest.fixture
 def database_instance():
     database = Database()
@@ -28,9 +29,8 @@ def loader_instance(database_instance):
 
 @pytest.fixture
 def sample_data():
-    file_path = "./tests/resources/sample_data.csv"
     extractor = Extractor()
-    data = extractor.extract_data(file_path)
+    data = extractor.extract_data(sample_data_path)
     return data
 
 def test_load_customers(database_instance, loader_instance, sample_data):
@@ -74,3 +74,20 @@ def test_load_sales(database_instance, loader_instance, sample_data):
     assert not df_result.empty
     assert len(df_result) == 3
     assert set(df_result["invoice_no"]) == {"536366", "536367", "536370"}
+
+def test_load(database_instance, loader_instance):
+    loader_instance.load(sample_data_path)
+
+    df_customers = database_instance.fetch_data(
+        "SELECT * FROM customers WHERE customer_id IN ('17850', '13047', '12583');")
+    assert len(df_customers) == 3
+
+    df_products = database_instance.fetch_data(
+        "SELECT * FROM products WHERE stock_code IN ('22633', '22632', '84879', '22728');")
+    assert len(df_products) == 4
+
+    df_dates = database_instance.fetch_data("SELECT * FROM dates WHERE date_id = 20101201;")
+    assert len(df_dates) == 1
+
+    df_sales = database_instance.fetch_data("SELECT * FROM sales WHERE invoice_no IN ('536366', '536367', '536370');")
+    assert len(df_sales) == 3
