@@ -73,6 +73,7 @@ class Database:
         print("Fetching data...")
         cursor = connection.cursor()
 
+        self.validate_query(query, "SELECT")
         try:
             cursor.execute(query, params)
             if cursor.description:
@@ -82,12 +83,13 @@ class Database:
         finally:
             cursor.close()
             connection.close()
-        print("Data fetched")
 
 
     def update_data(self, query, params=None):
         connection = self.connect()
         cursor = connection.cursor()
+
+        self.validate_query(query, "UPDATE")
 
         try:
             cursor.execute(query, params)
@@ -104,6 +106,8 @@ class Database:
         connection = self.connect()
         cursor = connection.cursor()
 
+        self.validate_query(query, "DELETE")
+
         try:
             cursor.execute(query, params)
             connection.commit()
@@ -113,3 +117,9 @@ class Database:
         finally:
             cursor.close()
             connection.close()
+
+    def validate_query(self, query, expected_command):
+        query = query.strip().upper()
+
+        if not query.startswith(expected_command):
+            raise ValueError(f"Expected a {expected_command} query")
