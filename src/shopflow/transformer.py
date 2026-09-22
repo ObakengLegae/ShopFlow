@@ -3,7 +3,9 @@ import os
 
 class Transformer:
     def transform(self, df):
+        print("Transforming data")
 
+        print("Renaming columns")
         df = df.rename(columns={
             'InvoiceNo': 'invoice_no',
             'StockCode': 'stock_code',
@@ -15,10 +17,12 @@ class Transformer:
             'Country': 'country'
         })
 
+        print("Adding placeholders to null values")
         df['description'] = df['description'].fillna("unknown").astype(str)
         df['customer_id'] = df['customer_id'].fillna("unknown").astype(str)
         df['sale_timestamp'] = pd.to_datetime(df['sale_timestamp'], format='%m/%d/%y %H:%M')
 
+        print("Creating new columns")
         df['date_id'] = df['sale_timestamp'].dt.strftime('%Y%m%d').astype(int)
         df['full_date'] = df['sale_timestamp'].dt.date
         df['year'] = df['sale_timestamp'].dt.year
@@ -30,16 +34,18 @@ class Transformer:
         df['total_amount'] = df['quantity'] * df['unit_price']
         df['total_amount'] = df['total_amount'].map('{:.2f}'.format)
 
+        print("Transformation complete")
         return df
 
     def save_transformed_data(self, df):
 
+        print("Saving transformed data")
         path = './data/processed/uci/'
         os.makedirs(path, exist_ok=True)
 
-        df.to_csv(path + 'test_processed_data.csv', index=False)
+        df.to_csv(path + 'processed_data.csv', index=False)
 
-        expected_result = './data/processed/uci/test_processed_data.csv'
+        expected_result = './data/processed/uci/processed_data.csv'
 
         if os.path.exists(expected_result):
             print(f"Data saved to csv at {expected_result}")

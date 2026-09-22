@@ -1,6 +1,6 @@
 import pandas as pd
-from src.shopflow.database.database import Database
-from src.shopflow.extractor import Extractor
+from database.database import Database
+from extractor import Extractor
 
 class Loader:
     def __init__(self, database: Database):
@@ -8,8 +8,10 @@ class Loader:
         self.extractor = Extractor()
 
     def load(self, file_path: str):
+        print(f"Loading data from {file_path}")
         processed_data = self.extractor.extract_data(file_path)
 
+        print("Adding data to database")
         self.load_customers(processed_data)
         self.load_products(processed_data)
         self.load_dates(processed_data)
@@ -22,6 +24,7 @@ class Loader:
         ].drop_duplicates(subset="customer_id")
 
         self.database.insert_data(customers, "customers")
+        print("Customers added to database")
 
     def load_products(self, data: pd.DataFrame):
         products = data[
@@ -29,6 +32,7 @@ class Loader:
         ].drop_duplicates(subset="stock_code")
 
         self.database.insert_data(products, "products")
+        print("Products added to database")
 
     def load_dates(self, data: pd.DataFrame):
         dates = data[
@@ -36,6 +40,7 @@ class Loader:
         ].drop_duplicates(subset="date_id")
 
         self.database.insert_data(dates, "dates")
+        print("Dates added to database")
 
     def load_sales(self, data: pd.DataFrame):
         sales = data[
@@ -44,3 +49,4 @@ class Loader:
         ].drop_duplicates(subset="invoice_no")
 
         self.database.insert_data(sales, "sales")
+        print("Sales added to database")

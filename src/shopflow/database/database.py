@@ -28,6 +28,7 @@ class Database:
 
     def create_tables(self, sql_file):
         connection = self.connect()
+        print("Creating tables...")
         cursor = connection.cursor()
 
         try:
@@ -42,10 +43,12 @@ class Database:
         finally:
             cursor.close()
             connection.close()
+        print("Tables created")
 
 #Todo: Add some validation logic against empty frames and table names
     def insert_data(self, df: pd.DataFrame, table_name: str):
         connection = self.connect()
+        print("Inserting data...")
         cursor = connection.cursor()
 
         columns = ', '.join(df.columns)
@@ -62,10 +65,12 @@ class Database:
         finally:
             cursor.close()
             connection.close()
+        print("Data inserted")
 
 
     def fetch_data(self, query, params=None):
         connection = self.connect()
+        print("Fetching data...")
         cursor = connection.cursor()
 
         try:
@@ -77,6 +82,7 @@ class Database:
         finally:
             cursor.close()
             connection.close()
+        print("Data fetched")
 
 
     def update_data(self, query, params=None):
