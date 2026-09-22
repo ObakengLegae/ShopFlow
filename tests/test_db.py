@@ -1,6 +1,6 @@
 import pytest
 from sqlalchemy import create_engine, text
-from src.shopflow.database.init_db import initialize_database
+from src.shopflow.database.database import initialize_database
 
 @pytest.fixture
 def db_engine():
