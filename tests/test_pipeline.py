@@ -59,7 +59,7 @@ def test_pipeline_with_empty_data(database_instance):
     assert len(df_sales) == 0
 
 
-def def_test_pipeline_data_file_not_found(database_instance):
+def test_pipeline_data_file_not_found(database_instance):
 
     pipeline = Pipeline(
         sql_file_path=database_instance.default_sql,
