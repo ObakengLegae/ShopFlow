@@ -5,11 +5,8 @@ from src.shopflow.extractor import Extractor
 class Loader:
     def __init__(self, database: Database):
         self.database = database
-        self.extractor = Extractor()
 
-    def load(self, file_path: str):
-        print(f"Loading data from {file_path}")
-        processed_data = self.extractor.extract_data(file_path)
+    def load(self, processed_data: pd.DataFrame):
 
         print("Adding data to database")
         self.load_customers(processed_data)
