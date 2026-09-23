@@ -4,6 +4,8 @@ from src.shopflow.pipeline import Pipeline
 from src.shopflow.database.database import Database
 
 sample_data_path = "./tests/resources/raw_csv_with_null_values.csv"
+empty_data_path = "./tests/resources/empty_data.csv"
+not_found_data_path = "./tests/resources/not_found.csv"
 
 @pytest.fixture
 def database_instance():
@@ -25,7 +27,7 @@ def database_instance():
 def test_pipeline_success(database_instance):
 
     pipeline = Pipeline(
-        sql_file_path=database_instance.sql_file_path,
+        sql_file_path=database_instance.default_sql,
         raw_data_path=sample_data_path,
         database=database_instance
     )
@@ -42,3 +44,28 @@ def test_pipeline_success(database_instance):
 
     df_sales = database_instance.fetch_data("SELECT DISTINCT invoice_no FROM sales;")
     assert len(df_sales) == 3
+
+def test_pipeline_with_empty_data(database_instance):
+
+    pipeline = Pipeline(
+        sql_file_path=database_instance.default_sql,
+        raw_data_path=empty_data_path,
+        database=database_instance
+    )
+
+    pipeline.run()
+
+    df_sales = database_instance.fetch_data("SELECT * FROM sales;")
+    assert len(df_sales) == 0
+
+
+def def_test_pipeline_data_file_not_found(database_instance):
+
+    pipeline = Pipeline(
+        sql_file_path=database_instance.default_sql,
+        raw_data_path=not_found_data_path,
+        database=database_instance
+    )
+
+    with pytest.raises(FileNotFoundError):
+        pipeline.run()

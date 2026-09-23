@@ -1,9 +1,9 @@
 import logging
 
-from extractor import Extractor
-from transformer import Transformer
-from loader import Loader
-from database.database import Database
+from src.shopflow.extractor import Extractor
+from src.shopflow.transformer import Transformer
+from src.shopflow.loader import Loader
+from src.shopflow.database.database import Database
 
 logging.basicConfig(
     level=logging.INFO,
