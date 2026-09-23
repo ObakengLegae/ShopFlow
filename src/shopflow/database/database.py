@@ -68,7 +68,7 @@ class Database:
         print("Data inserted")
 
 
-    def fetch_data(self, query, params=None):
+    def fetch_data(self, query: str, params=None):
         connection = self.connect()
         print("Fetching data...")
         cursor = connection.cursor()
@@ -85,7 +85,7 @@ class Database:
             connection.close()
 
 
-    def update_data(self, query, params=None):
+    def update_data(self, query: str, params=None):
         connection = self.connect()
         cursor = connection.cursor()
 
@@ -102,7 +102,7 @@ class Database:
             connection.close()
 
 
-    def delete_data(self, query, params=None):
+    def delete_data(self, query: str, params=None):
         connection = self.connect()
         cursor = connection.cursor()
 
@@ -118,7 +118,7 @@ class Database:
             cursor.close()
             connection.close()
 
-    def validate_query(self, query, expected_command):
+    def validate_query(self, query: str, expected_command: str):
         query = query.strip().upper()
 
         if not query.startswith(expected_command):

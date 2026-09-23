@@ -1,8 +1,10 @@
 import pandas as pd
 import os
-
+#Todo: Replace print statements
 class Transformer:
-    def transform(self, df):
+    def transform(self, df: pd.DataFrame):
+        """Cleans and processes raw data"""
+
         print("Transforming data")
 
         print("Renaming columns")
@@ -37,7 +39,8 @@ class Transformer:
         print("Transformation complete")
         return df
 
-    def save_transformed_data(self, df):
+    def save_transformed_data(self, df: pd.DataFrame):
+        """Saves transformed data to csv file"""
 
         print("Saving transformed data")
         path = './data/processed/uci/'

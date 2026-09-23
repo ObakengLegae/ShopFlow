@@ -2,7 +2,9 @@ import pandas as pd
 import os
 
 class Extractor:
-    def extract_data(self, file_path):
+    def extract_data(self, file_path: str):
+
+        """Extract data from csv file, returns dataframe"""
         if not os.path.exists(file_path):
             raise FileNotFoundError(f'File {file_path} not found')
 
