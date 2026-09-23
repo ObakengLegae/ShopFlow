@@ -75,8 +75,8 @@ def test_load_sales(database_instance, loader_instance, sample_data):
     assert len(df_result) == 3
     assert set(df_result["invoice_no"]) == {"536366", "536367", "536370"}
 
-def test_load(database_instance, loader_instance):
-    loader_instance.load(sample_data_path)
+def test_load(database_instance, loader_instance, sample_data):
+    loader_instance.load(sample_data)
 
     df_customers = database_instance.fetch_data(
         "SELECT * FROM customers WHERE customer_id IN ('17850', '13047', '12583');")
@@ -91,7 +91,3 @@ def test_load(database_instance, loader_instance):
 
     df_sales = database_instance.fetch_data("SELECT * FROM sales WHERE invoice_no IN ('536366', '536367', '536370');")
     assert len(df_sales) == 3
-
-def test_load_non_existent_file_raises_error(loader_instance):
-    with pytest.raises(FileNotFoundError):
-        loader_instance.load("non_existent_file.csv")

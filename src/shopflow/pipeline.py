@@ -23,7 +23,7 @@ class Pipeline:
 
         self.transformer.save_transformed_data(transformed_data)
 
-        self.loader.load(self.processed_data_path)
+        self.loader.load(transformed_data)
 
 
 if __name__ == '__main__':
