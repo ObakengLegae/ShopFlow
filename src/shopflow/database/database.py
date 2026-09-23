@@ -63,41 +63,50 @@ class Database:
             connection.close()
 
     def insert_data(self, df: pd.DataFrame, table_name: str):
-        connection = self.connect()
-        print("Inserting data...")
-        cursor = connection.cursor()
+        """Bulk inserts a Pandas dataframe into the specified table."""
+        if df is None or df.empty:
+            logger.warning(f"DataFrame for {table_name} is empty. Skipping insert.")
+            return
 
+        if not table_name:
+            logger.error(f"Invalid table name: {table_name}")
+            raise ValueError(f"Invalid table name: {table_name}")
+
+        logger.info(f"Inserting data into table: {table_name}")
         columns = ', '.join(df.columns)
-        query = f"INSERT INTO {table_name} ({columns}) VALUES %s"
-
+        query = f"INSERT INTO {table_name} ({columns}) VALUES %s ON CONFLICT DO NOTHING"
         data_tuples = list(df.itertuples(index=False, name=None))
 
+        connection = self.connect()
         try:
-            execute_values(cursor, query, data_tuples)
-            connection.commit()
-        except Exception:
-            connection.rollback()
+            with connection:
+                with connection.cursor() as cursor:
+                    execute_values(cursor, query, data_tuples)
+                logger.info(f"Data inserted into {table_name} successfully")
+        except Exception as e:
+            logger.error(f"Failed to insert data into {table_name}': {e}")
             raise
         finally:
-            cursor.close()
             connection.close()
-        print("Data inserted")
 
 
     def fetch_data(self, query: str, params=None):
-        connection = self.connect()
-        print("Fetching data...")
-        cursor = connection.cursor()
-
+        """Executes a SELECT query and returns the results as a Pandas dataframe."""
         self.validate_query(query, "SELECT")
+        logger.info("Fetching data...")
+
+        connection = self.connect()
+
         try:
-            cursor.execute(query, params)
-            if cursor.description:
-                columns = [desc[0] for desc in cursor.description]
-                return pd.DataFrame(cursor.fetchall(), columns=columns)
-            return pd.DataFrame()
+            with connection.cursor() as cursor:
+                cursor.execute(query, params)
+                if cursor.description:
+                    columns = [desc[0] for desc in cursor.description]
+                    return pd.DataFrame(cursor.fetchall(), columns=columns)
+                return pd.DataFrame()
+        except Exception as e:
+            logger.error(f"Error fetching data: {e}")
         finally:
-            cursor.close()
             connection.close()
 
 
