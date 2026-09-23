@@ -111,40 +111,37 @@ class Database:
 
 
     def update_data(self, query: str, params=None):
-        connection = self.connect()
-        cursor = connection.cursor()
-
+        """Executes Update query."""
         self.validate_query(query, "UPDATE")
-
-        try:
-            cursor.execute(query, params)
-            connection.commit()
-        except Exception:
-            connection.rollback()
-            raise
-        finally:
-            cursor.close()
-            connection.close()
+        self._execute_write_query(query, params, action="Updating data")
 
 
     def delete_data(self, query: str, params=None):
-        connection = self.connect()
-        cursor = connection.cursor()
-
+        """Executes Delete query."""
         self.validate_query(query, "DELETE")
+        self._execute_write_query(query, params, action="Deleting data")
+
+    def _execute_write_query(self, query: str, params: tuple = None, action: str = None):
+        """Helper function removing boilerplate code for UPDATE and DELETE operations."""
+        logger.info(f"{action}")
+        connection = self.connect()
 
         try:
-            cursor.execute(query, params)
-            connection.commit()
-        except Exception:
-            connection.rollback()
-            raise
-        finally:
-            cursor.close()
-            connection.close()
+            with connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(query, params)
+            logger.info(f"{action} completed successfully")
+        except Exception as e:
+            logger.error(f"Error during {action.lower()}: {e}")
+
 
     def validate_query(self, query: str, expected_command: str):
-        query = query.strip().upper()
+        """Validates that a query starts with the expected SQL command."""
+        if not query or not isinstance(query, str):
+            logger.error("Query must be a non-empty string")
+            raise ValueError("Query must be a non-empty string")
 
-        if not query.startswith(expected_command):
+        clean_query = query.strip().upper()
+        if not clean_query.startswith(expected_command):
+            logger.error(f"Validation failed. Expected {expected_command} query")
             raise ValueError(f"Expected a {expected_command} query")
