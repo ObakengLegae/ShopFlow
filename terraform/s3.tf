@@ -3,7 +3,7 @@ resource "aws_s3_bucket" "data_storage" {
 
     tags = {
         Project     = "Shopflow"
-        Environment =
+        Environment = "dev"
     }
 }
 
