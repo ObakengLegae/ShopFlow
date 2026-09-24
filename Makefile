@@ -1,16 +1,20 @@
 DOCKER ?= sudo docker
+PYTHON = python
 TEST_PATH ?=
 
-.PHONY: all run_database test stop_database
+.PHONY: run_database stop_database test run_local
 
-all: run_database test stop_database
 run_database:
 	@$(DOCKER) compose up -d
+	@sleep 2
 
 stop_database:
 	@$(DOCKER) compose down
 
-test:
-	@sleep 2
+test: run_database
 	@python3 -m pytest tests/$(TEST_PATH) -v
-	@sleep 1
+	@$(MAKE) stop_database
+
+run_local: run_database
+	$(PYTHON) src/shopflow/pipeline.py
+
