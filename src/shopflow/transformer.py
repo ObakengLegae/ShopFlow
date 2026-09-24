@@ -69,9 +69,12 @@ class Transformer:
         logger.info('Saving transformed backup')
 
         try:
-            os.makedirs(file_path, exist_ok=True)
+            directory = os.path.dirname(file_path)
 
-            df.to_csv(file_path + 'processed_data.csv', index=False)
+            if directory:
+                os.makedirs(directory, exist_ok=True)
+
+            df.to_csv(file_path, index=False)
 
             if os.path.exists(file_path):
                 logger.info(f"Data saved to csv at: {file_path}")
