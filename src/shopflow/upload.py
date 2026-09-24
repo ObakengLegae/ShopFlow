@@ -24,7 +24,7 @@ class Uploader:
             logger.warning(f"Failed to initialize S3 client: {e}")
             self.s3_client = None
 
-    def upload_file_to_s3(self, file_path: str, object_name: str = None) -> bool:
+    def upload(self, file_path: str, object_name: str = None) -> bool:
         """Uploads a local file to an AWS S3 bucket."""
         if not self.bucket_name or self.s3_client:
             logger.info("No bucket name configured or s3 client missing, skipping upload")

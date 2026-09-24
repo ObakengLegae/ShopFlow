@@ -6,6 +6,7 @@ from src.shopflow.extractor import Extractor
 from src.shopflow.transformer import Transformer
 from src.shopflow.loader import Loader
 from src.shopflow.database.database import Database
+from upload import Uploader
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +24,8 @@ class Pipeline:
             database: Database = None,
             extractor: Extractor = None,
             transformer: Transformer = None,
-            loader: Loader = None
+            loader: Loader = None,
+            uploader: Uploader = None
     ):
         self.sql_file_path = sql_file_path or './sql/schema.sql'
         self.raw_data_path = raw_data_path or './data/raw/uci/online_retail.csv'
@@ -43,6 +45,7 @@ class Pipeline:
         self.extractor = extractor or Extractor()
         self.transformer = transformer or Transformer()
         self.loader = loader or Loader(database=self.database)
+        self.uploader = uploader or Uploader()
 
     def run(self):
         logger.info("Initializing pipeline...")
@@ -61,7 +64,11 @@ class Pipeline:
             transformed_data = self.transformer.transform(raw_data)
 
             logger.info(f"Saving processed backup to {self.processed_data_path}...")
+            os.makedirs(os.path.dirname(self.prcessed_data_path), exist_ok=True)
             self.transformer.save_transformed_data(transformed_data, file_path=self.processed_data_path)
+
+            logger.info("Uploading processed data to s3...")
+            self.uploader.upload(self.processed_data_path)
 
             logger.info("Loading processed data into schema...")
             self.loader.load(transformed_data)
@@ -75,9 +82,11 @@ class Pipeline:
 
 if __name__ == '__main__':
     database = Database()
+    uploader = Uploader(bucket_name=None)
     pipeline = Pipeline(
         sql_file_path='./sql/schema.sql',
         raw_data_path='data/raw/uci/online_retail.csv',
         database=database,
+        uploader=uploader
     )
     pipeline.run()
