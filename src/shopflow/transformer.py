@@ -59,8 +59,7 @@ class Transformer:
             logger.error(f"An error occurred: {e}")
             raise
 
-#Todo: Implement logic to save the data using different file names
-    def save_transformed_data(self, df: pd.DataFrame, file_path: str = './data/processed/uci/processed_data.csv'):
+    def save_transformed_data(self, df: pd.DataFrame, file_path: str = './data/processed/processed_data.csv'):
         """Saves transformed data to csv file"""
         if df is None or df.empty:
             logger.warning(f"Empty dataframe. Skipping save operation")

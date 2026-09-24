@@ -1,4 +1,6 @@
 import logging
+import os
+from datetime import datetime
 
 from src.shopflow.extractor import Extractor
 from src.shopflow.transformer import Transformer
@@ -24,7 +26,18 @@ class Pipeline:
             loader: Loader = None
     ):
         self.sql_file_path = sql_file_path or './sql/schema.sql'
-        self.raw_data_path = raw_data_path or './data/raw/online_retail.csv'
+        self.raw_data_path = raw_data_path or './data/raw/uci/online_retail.csv'
+
+        if processed_data_path is None:
+            base_name = os.path.basename(self.raw_data_path)
+            name, extension = os.path.splitext(base_name)
+
+            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+            self.processed_data_path = f'./data/processed/{name}_{timestamp}{extension}'
+        else:
+            self.processed_data_path = processed_data_path
+
         self.processed_data_path = processed_data_path or './data/processed/online_retail.csv'
         self.database = database or Database()
         self.extractor = extractor or Extractor()
@@ -47,8 +60,8 @@ class Pipeline:
             logger.info("Transforming raw data...")
             transformed_data = self.transformer.transform(raw_data)
 
-            logger.info("Saving processed backup...")
-            self.transformer.save_transformed_data(transformed_data)
+            logger.info(f"Saving processed backup to {self.processed_data_path}...")
+            self.transformer.save_transformed_data(transformed_data, file_path=self.processed_data_path)
 
             logger.info("Loading processed data into schema...")
             self.loader.load(transformed_data)
@@ -61,5 +74,10 @@ class Pipeline:
             raise
 
 if __name__ == '__main__':
-    pipeline = Pipeline()
+    database = Database()
+    pipeline = Pipeline(
+        sql_file_path='./sql/schema.sql',
+        raw_data_path='data/raw/uci/online_retail.csv',
+        database=database,
+    )
     pipeline.run()
