@@ -7,6 +7,7 @@ from datetime import datetime
 
 from src.shopflow.pipeline import Pipeline
 from src.shopflow.database.database import Database
+from src.shopflow.upload import Uploader
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -34,11 +35,15 @@ def lambda_handler(event, context):
         processed_backup_path = f"/tmp/{name}_processed_{timestamp}{ext}"
 
         logger.info("Initializing Pipeline with Cloud-Oriented Paths")
+
+        uploader = Uploader(bucket_name=bucket, s3_prefix="processed/")
+
         cloud_pipeline = Pipeline(
             raw_data_path=download_path,
             processed_data_path=processed_backup_path,
             sql_file_path=schema_path,
-            database=Database()
+            database=Database(),
+            uploader=uploader
         )
 
         logger.info("Triggering cloud pipeline run")
