@@ -7,7 +7,7 @@ from datetime import datetime
 
 from src.shopflow.pipeline import Pipeline
 from src.shopflow.database.database import Database
-from src.shopflow.upload import Uploader
+from src.shopflow.uploader import Uploader
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

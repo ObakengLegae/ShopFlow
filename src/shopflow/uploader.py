@@ -26,7 +26,7 @@ class Uploader:
 
     def upload(self, file_path: str, object_name: str = None) -> bool:
         """Uploads a local file to an AWS S3 bucket."""
-        if not self.bucket_name or self.s3_client:
+        if not self.bucket_name or not self.s3_client:
             logger.info("No bucket name configured or s3 client missing, skipping upload")
             return False
 
@@ -61,11 +61,11 @@ class Uploader:
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print("Usage: python upload.py <path_to_file> <s3_bucket_name>")
+        print("Usage: python uploader.py <path_to_file> <s3_bucket_name>")
         sys.exit(1)
 
     local_file_path = sys.argv[1]
     bucket_name = sys.argv[2]
 
     uploader = Uploader(bucket_name=bucket_name, s3_prefix="")
-    uploader.upload_file_to_s3(local_file_path)
+    uploader.upload(local_file_path)

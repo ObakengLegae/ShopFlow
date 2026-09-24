@@ -6,7 +6,7 @@ from src.shopflow.extractor import Extractor
 from src.shopflow.transformer import Transformer
 from src.shopflow.loader import Loader
 from src.shopflow.database.database import Database
-from upload import Uploader
+from src.shopflow.uploader import Uploader
 
 logging.basicConfig(
     level=logging.INFO,
@@ -40,7 +40,6 @@ class Pipeline:
         else:
             self.processed_data_path = processed_data_path
 
-        self.processed_data_path = processed_data_path or './data/processed/online_retail.csv'
         self.database = database or Database()
         self.extractor = extractor or Extractor()
         self.transformer = transformer or Transformer()
@@ -64,7 +63,7 @@ class Pipeline:
             transformed_data = self.transformer.transform(raw_data)
 
             logger.info(f"Saving processed backup to {self.processed_data_path}...")
-            os.makedirs(os.path.dirname(self.prcessed_data_path), exist_ok=True)
+            os.makedirs(os.path.dirname(self.processed_data_path), exist_ok=True)
             self.transformer.save_transformed_data(transformed_data, file_path=self.processed_data_path)
 
             logger.info("Uploading processed data to s3...")
