@@ -20,6 +20,7 @@ resource "aws_security_group" "rds_sg" {
         cidr_blocks  = ["0.0.0.0/0"]
     }
 }
+
 resource "aws_db_instance" "postgres" {
     identifier           = "shopflow-db"
     engine               = "postgres"
