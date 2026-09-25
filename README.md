@@ -1,24 +1,62 @@
 # ShopFlow
 
-ShopFlow is an e-commerce data platform designed to demonstrate both data engineering and cloud computing concepts.
+ShopFlow is an e-commerce data platform designed to demonstrate both **data engineering** and **cloud computing** concepts.
 
-The project implements an ETL pipeline that extracts raw transactional data, transforms and validates it using Python,
-and loads it into PostgreSQL.
+The project implements an ETL pipeline that extracts raw transactional data, transforms and validates it using Python, and loads it into PostgreSQL.
 
 The same pipeline can run locally using Docker or in AWS using S3, Lambda and RDS.
 
 ## Architecture Overviews
 
 ### Local Development (ETL to DB)
+
 In the local development environment, the pipeline processes data via local Python scripts and loads it into a 
 containerized database.
-- **Workflow:** `Local CSV -> Python ETL (Extractor -> Transformer -> Loader) -> Local PostgreSQL (Docker)`
+
+**Workflow:**
+
+```text
+Local CSV
+    |
+    v
+Python ETL
+    |
+    +--> Extractor
+    |
+    +--> Transformer
+    |
+    +--> Loader
+    |
+    v
+PostgreSQL (Docker)
+```
 
 ### Cloud Deployment (AWS)
 In the cloud, the pipeline adopts a serverless, event-driven architecture using Infrastructure as Code (Terraform) and 
 AWS services.
-- **Workflow:** `CSV -> Amazon S3 -> S3 Event Trigger -> AWS Lambda -> Python ETL -> Amazon RDS`
-- **Security:** AWS IAM roles and policies strictly manage permissions across S3, Lambda, and RDS to ensure secure resource access.
+
+```text
+   CSV
+    |
+    v
+ Amazon S3
+    |
+    | S3 Event
+    v
+ AWS Lambda
+    |
+    v
+ Python ETL
+    |
+    v
+ Amazon RDS (PostgreSQL)
+    
+
+```
+
+**Security:**
+
+AWS IAM roles and policies strictly manage permissions across S3, Lambda, and RDS to ensure secure resource access.
 
 For more information, see: docs/
 
