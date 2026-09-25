@@ -1,4 +1,4 @@
-# ShopFlow Python ETL Execution Flow
+# ShopFlow Python ETL Execution & Flow
 
 This diagram illustrates the step-by-step logic and class interactions defined inside the `src/shopflow/` source code. It outlines how raw data moves through the pipeline and ultimately lands in the database schemas.
 
