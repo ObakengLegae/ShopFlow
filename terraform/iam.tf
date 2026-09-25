@@ -31,7 +31,8 @@ data "aws_iam_policy_document" "lambda_s3_read" {
   statement {
     effect = "Allow"
     actions = [
-      "s3:GetObject"
+      "s3:GetObject",
+      "s3:PutObject"
     ]
     resources = [
       "${aws_s3_bucket.data_storage.arn}/*"

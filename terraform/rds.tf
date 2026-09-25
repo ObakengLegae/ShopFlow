@@ -1,3 +1,7 @@
+data "aws_vpc" "default" {
+    default = true
+}
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -14,7 +18,7 @@ resource "aws_security_group" "rds_sg" {
     description  = "Security for RDS postgres instance"
     vpc_id       = data.aws_vpc.default.id
 
-    ingres {
+    ingress {
         from_port    = 5432
         to_port      = 5432
         protocol     = "tcp"
@@ -49,7 +53,7 @@ resource "aws_db_instance" "postgres" {
     username             = var.db_username
     password             = var.db_password
 
-    aws_db_subnet_group_name = aws_db_subnet_group.default.name
+    db_subnet_group_name = aws_db_subnet_group.default.name
     vpc_security_group_ids = [aws_security_group.rds_sg.id]
 
     skip_final_snapshot  = true
