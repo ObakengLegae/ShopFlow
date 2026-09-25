@@ -33,6 +33,10 @@ class Transformer:
             logger.debug("Converting timestamps")
             df['sale_timestamp'] = pd.to_datetime(df['sale_timestamp'], format='%m/%d/%y %H:%M')
 
+            logger.debug("Filtering out future dates")
+            current_time = pd.Timestamp.now()
+            df = df[df['sale_timestamp'] <= current_time].copy()
+
             logger.debug("Creating new date columns")
             df['date_id'] = df['sale_timestamp'].dt.strftime('%Y%m%d').astype(int)
             df['full_date'] = df['sale_timestamp'].dt.date
@@ -43,8 +47,7 @@ class Transformer:
             df['day_of_week'] = df['sale_timestamp'].dt.day_name()
 
             logger.debug("Calculating total amount")
-            df['total_amount'] = df['quantity'] * df['unit_price']
-            df['total_amount'] = df['total_amount'].map('{:.2f}'.format)
+            df['total_amount'] = (df['quantity'] * df['unit_price']).map('{:.2f}'.format)
 
             logger.info("Transformation complete")
             return df
